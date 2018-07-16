@@ -25,8 +25,12 @@ import { TaskEffects } from './task/task.effects';
 import { TaskService } from './task/task.service';
 import { TaskDataService } from './task/task.data.service';
 
+import { ViewTaskPageComponent } from './task/containers/view-task-page.component';
+import { SelectedTaskPageComponent } from './task/containers/selected-task-page.component';
+import { TaskDetailFormComponent } from './task/components/task-detail-form/task-detail-form.component';
+
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, ViewTaskPageComponent, SelectedTaskPageComponent, TaskDetailFormComponent],
   entryComponents: [],
   imports: [
     BrowserModule,

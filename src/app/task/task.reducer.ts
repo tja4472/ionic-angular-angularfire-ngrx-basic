@@ -1,15 +1,19 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import { Task } from './task.model';
 import { TaskActions, TaskActionTypes } from './task.actions';
+import { stat } from 'fs';
+import { createSelector } from '@ngrx/store';
 
 export interface State extends EntityState<Task> {
   // additional entities state properties
+  selectedTaskId: string | null;
 }
 
 export const adapter: EntityAdapter<Task> = createEntityAdapter<Task>();
 
 export const initialState: State = adapter.getInitialState({
   // additional entity state properties
+  selectedTaskId: null,
 });
 
 export function reducer(state = initialState, action: TaskActions): State {
@@ -68,15 +72,34 @@ export function reducer(state = initialState, action: TaskActions): State {
       return adapter.removeAll(state);
     }
 
+    case TaskActionTypes.SELECT_ITEM: {
+      return {
+        ...state,
+        selectedTaskId: action.payload.id,
+      };
+    }
+
     default: {
       return state;
     }
   }
 }
-
+/*
 export const {
   selectIds,
   selectEntities,
   selectAll,
   selectTotal,
 } = adapter.getSelectors();
+*/
+export const getSelectedId = (state: State) => state.selectedTaskId;
+
+/*
+export const getSelectedTask = createSelector(
+  selectEntities,
+  getSelectedId,
+  (entities, selectedId) => {
+    return selectedId && entities[selectedId];
+  }
+);
+*/

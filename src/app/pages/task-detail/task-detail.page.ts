@@ -1,20 +1,26 @@
 import {
   Component,
-  OnDestroy,
   OnInit,
   AfterViewChecked,
   AfterViewInit,
+  OnDestroy,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
+import { ActivatedRoute } from '@angular/router';
+
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { auth, User } from 'firebase';
-import { BehaviorSubject, Observable, pipe } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, pipe, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 import { Task, newTask } from '../../task/task.model';
 import { Store, select } from '@ngrx/store';
+
 import * as FromRoot from '../../reducers';
+import * as fromTasks from '../../reducers';
+
 import {
   EmailAuthentication,
   ListenForAuth,
@@ -22,7 +28,7 @@ import {
 } from '../../auth/auth.action';
 import * as FromAuthSelector from '../../auth/auth.selector';
 import { TaskService } from '../../task/task.service';
-import { ActivatedRoute, ParamMap } from '@angular/router';
+import { SelectItem } from '../../task/task.actions';
 
 const DATA_COLLECTION = 'tasks';
 const USERS_COLLECTION = 'users';
@@ -40,11 +46,12 @@ interface FormModel {
 }
 
 @Component({
-  selector: 'app-cloud-firestore',
-  templateUrl: './cloud-firestore.page.html',
-  styleUrls: ['./cloud-firestore.page.scss'],
+  selector: 'app-task-detail',
+  templateUrl: './task-detail.page.html',
+  styleUrls: ['./task-detail.page.scss'],
 })
-export class CloudFirestorePage implements OnDestroy, OnInit, AfterViewInit {
+export class TaskDetailPage implements OnDestroy, OnInit, AfterViewInit {
+  actionsSubscription: Subscription;
   // public authHasChecked$ = new BehaviorSubject(false);
   public authHasChecked$: Observable<boolean>;
 
@@ -63,14 +70,40 @@ export class CloudFirestorePage implements OnDestroy, OnInit, AfterViewInit {
   }
 
   constructor(
+    private route: ActivatedRoute,
     public afAuth: AngularFireAuth,
     public readonly afs: AngularFirestore,
     public formBuilder: FormBuilder,
     private readonly taskService: TaskService,
     private store: Store<FromRoot.State>,
-    private route: ActivatedRoute
   ) {
     //
+    //  let todoId = this.route.snapshot.paramMap.get('id');
+    //
+    this.actionsSubscription = route.params
+      .pipe(map((params) => new SelectItem({ id: params.id })))
+      .subscribe(store);
+    //////
+    store.pipe(select(fromTasks.getSelectedTask)).subscribe((x) => {
+      console.log('####task>', x);
+
+    });
+
+/*
+// selected-book-page.component.ts
+  this.book$ = store.pipe(select(fromBooks.getSelectedBook)) as Observable<
+      Book
+    >;
+
+
+*/
+// https://toddmotto.com/angular-parent-routing-params
+// https://stackoverflow.com/questions/40967726/angular2-ngrx-store-with-route-parameters
+
+/* All I really want is the task */
+
+
+    //////
     this.createForm();
 
     this.authHasChecked$ = this.store.pipe(
@@ -83,16 +116,13 @@ export class CloudFirestorePage implements OnDestroy, OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    console.log('===ngOnInit');
-    // should unsubscribe.
-    this.route.paramMap.pipe(
-      map((paramMap) => paramMap.get('id'))).subscribe((id) => {
-        console.log('id>', id);
-      });
+    console.log('ngOnInit');
   }
 
   ngAfterViewInit() {
     console.log('ngAfterViewInit');
+    // const xx = this.route.snapshot.paramMap.get('id');
+    // console.log('form param>', xx);
   }
 
   public doCreateItem() {
@@ -117,10 +147,6 @@ export class CloudFirestorePage implements OnDestroy, OnInit, AfterViewInit {
       .doc(doc.id)
       .set(doc);
     */
-  }
-
-  ngOnDestroy() {
-    console.log('===ngOnDestroy');
   }
 
   public doDeleteItem(item: Task) {
@@ -258,4 +284,8 @@ export class CloudFirestorePage implements OnDestroy, OnInit, AfterViewInit {
     });
   }
   */
+
+  ngOnDestroy() {
+    this.actionsSubscription.unsubscribe();
+  }
 }

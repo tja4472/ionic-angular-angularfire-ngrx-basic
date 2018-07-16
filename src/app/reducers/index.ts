@@ -25,7 +25,22 @@ export const metaReducers: MetaReducer<State>[] = !environment.production
 
 export const getTaskState = (state: State) => state.task;
 
-export const selectAllTasks = createSelector(
+export const getSelectedTaskId = createSelector(
   getTaskState,
-  fromTask.selectAll,
+  fromTask.getSelectedId,
+);
+
+export const {
+  selectIds: getTaskIds,
+  selectEntities: getTaskEntities,
+  selectAll: getAllTasks,
+  selectTotal: getTotalTasks,
+} = fromTask.adapter.getSelectors(getTaskState);
+
+export const getSelectedTask = createSelector(
+  getTaskEntities,
+  getSelectedTaskId,
+  (entities, selectedId) => {
+    return selectedId && entities[selectedId];
+  },
 );

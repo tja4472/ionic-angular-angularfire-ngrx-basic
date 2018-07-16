@@ -1,0 +1,27 @@
+<form [formGroup]="form"
+      (ngSubmit)="onSubmit()"
+      novalidate>
+    <ion-list lines="none">
+        <ion-item>
+            <ion-label stacked
+                       color="primary">Name</ion-label>
+            <ion-input formControlName="name"
+                       placeholder="Name"></ion-input>
+        </ion-item>
+    </ion-list>
+    <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-button                     type="submit"
+            [disabled]="form.pristine"
+                        expand="block">Save</ion-button>
+          </ion-col>
+          <ion-col>
+            <ion-button (click)="revert()"
+            [disabled]="form.pristine"
+                        color="light"
+                        expand="block">Revert</ion-button>
+          </ion-col>
+        </ion-row>
+      </ion-grid>    
+</form>

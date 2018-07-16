@@ -7,15 +7,12 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { CloudFirestorePage } from './cloud-firestore.page';
+import { TaskDetailPage } from './task-detail.page';
 
 const routes: Routes = [
   {
     path: '',
-    component: CloudFirestorePage
-  }, {
-    path: ':id',
-    component: CloudFirestorePage
+    component: TaskDetailPage
   }
 ];
 
@@ -27,6 +24,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [CloudFirestorePage]
+  declarations: [TaskDetailPage]
 })
-export class CloudFirestorePageModule {}
+export class TaskDetailPageModule {}

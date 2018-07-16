@@ -30,7 +30,7 @@ export class TaskService {
 
   public getData$(): Observable<ReadonlyArray<Task>> {
     //
-    return this.store.pipe(select(FromRootReducer.selectAllTasks));
+    return this.store.pipe(select(FromRootReducer.getAllTasks));
   }
 
   public ListenForDataStart(): void {

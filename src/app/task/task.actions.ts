@@ -8,6 +8,7 @@ export enum TaskActionTypes {
   DATABASE_LISTEN_FOR_DATA_STOP = '[Task] (Database) Listen For Data - Stop',
   DELETE_ITEM = '[Task] Delete Item',
   LOAD_SUCCESS = '[Task] Load Success',
+  SELECT_ITEM = '[Task] Select Item',
   UPSERT_ITEM = '[Task] Upsert item',
   UPSERT_ITEM_ERROR = '[Task] Upsert Item - Error ',
   UPSERT_ITEM_SUCCESS = '[Task] Upsert Item - Success',
@@ -63,6 +64,12 @@ export class LoadSuccess implements Action {
   public readonly type = TaskActionTypes.LOAD_SUCCESS;
 
   constructor(public payload: { items: Task[] }) {}
+}
+
+export class SelectItem implements Action {
+  public readonly type = TaskActionTypes.SELECT_ITEM;
+
+  constructor(public payload: { id: string }) {}
 }
 
 export class UpsertItem implements Action {
@@ -154,6 +161,7 @@ export type TaskActions =
   | DatabaseListenForDataStartError
   | DatabaseListenForDataStop
   | LoadSuccess
+  | SelectItem
   // ==================
   | LoadTasks
   | AddTask

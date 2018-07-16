@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
-    <ion-title>Cloud Firestore</ion-title>
+    <ion-title>Task Detail</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -76,10 +76,6 @@
                   slot="end">
         Create
       </ion-button>
-      <ion-button slot="end"
-                  routerLink="/task-detail/new">
-        Create Page
-      </ion-button>
     </ion-list-header>
 
 
@@ -97,10 +93,6 @@
         <ion-button (click)="doDeleteItem(item)"
                     slot="end">
           Delete
-        </ion-button>
-        <ion-button slot="end"
-                    routerLink="/task-detail/{{ item.id }}">
-          Edit Page
         </ion-button>
       </ion-item>
     </ion-item-divider>
